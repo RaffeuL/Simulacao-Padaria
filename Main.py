@@ -1,34 +1,23 @@
-import simpy
+from Padaria import Padaria
 from Cliente import Cliente
-from Fila import fila_caixa
-from Fila import fila_balcao
+import simpy
+
+def simula_Padaria(qtd_caixas: int , qtd_balconistas: int, clientes=''):
+    env = simpy.Environment()
+    caixas = simpy.Resource(env, capacity=qtd_caixas)
+    balconistas = simpy.Resource(env, capacity=qtd_balconistas)
+
+    c1 = Cliente(env, "Carlos", 1, 0.30, 0.40)
+    c2 = Cliente(env, "Jose", 1.10, 0.40, 1)
+    c3 = Cliente(env, "Matilda", 1.15, 0.20, 0.20)
+
+    p = Padaria(env, caixas, balconistas)
+
+    env.process(p.atender(c1))
+    env.process(p.atender(c2))
+    env.process(p.atender(c3))
+
+    env.run()
 
 
-env = simpy.Environment()
-recurso = simpy.Resource(env, capacity=1)
-recurso2 = simpy.Resource(env, capacity=1)
-
-
-cliente1 = Cliente("Carlos", 1, 0.30, 0.40)
-cliente2 = Cliente("Jose", 1.10, 0.40, 1)
-cliente3 = Cliente("Matilda", 1.15, 0.20, 0.20)
-cliente4 = Cliente("Maria", 3, 0.30, 0.40)
-cliente5 = Cliente("Fulano", 3, 0.30, 0.40)
-cliente6 = Cliente("Ciclano", 3.10, 0.30, 0.40)
-
-env.process(fila_caixa(env, recurso, cliente1))
-env.process(fila_caixa(env, recurso, cliente2))
-env.process(fila_caixa(env, recurso, cliente3))
-env.process(fila_caixa(env, recurso, cliente4))
-env.process(fila_caixa(env, recurso, cliente5))
-env.process(fila_caixa(env, recurso, cliente6))
-
-
-env.process(fila_balcao(env, recurso2, cliente1))
-env.process(fila_balcao(env, recurso2, cliente2))
-env.process(fila_balcao(env, recurso2, cliente3))
-env.process(fila_balcao(env, recurso2, cliente4))
-env.process(fila_balcao(env, recurso2, cliente5))
-env.process(fila_balcao(env, recurso2, cliente6))
-
-env.run()
+simula_Padaria(2, 1)
