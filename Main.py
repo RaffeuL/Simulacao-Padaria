@@ -1,5 +1,5 @@
 from Padaria import Padaria
-from Cliente import Cliente
+from Clientes import busca_clientes
 import simpy
 
 def simula_Padaria(qtd_caixas: int , qtd_balconistas: int, clientes=''):
@@ -8,17 +8,15 @@ def simula_Padaria(qtd_caixas: int , qtd_balconistas: int, clientes=''):
     balconistas = simpy.Resource(env, capacity=qtd_balconistas)
     
     #(env, tempo de chegada do cliente no caixa, tempo que ele demorou no caixa, tempo que ele demorou no balcão)
-    c1 = Cliente(env, "Carlos", 1, 0.30, 0.40)
-    c2 = Cliente(env, "Jose", 1.10, 0.40, 1)
-    c3 = Cliente(env, "Matilda", 1.15, 0.20, 0.20)
 
     p = Padaria(env, caixas, balconistas)
 
-    env.process(p.atender(c1))
-    env.process(p.atender(c2))
-    env.process(p.atender(c3))
+    for cliente in clientes:
+        env.process(p.atender(cliente))
+
 
     env.run()
 
 
-simula_Padaria(2, 1)
+clientes = busca_clientes()
+simula_Padaria(1, 1, clientes)
