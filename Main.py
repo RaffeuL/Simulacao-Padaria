@@ -24,11 +24,9 @@ def grafico_tempo_espera(clientes):
         tempos.append(cliente.t_espera_total)
 
     fig, ax = plt.subplots()
-    ax.plot(nomes, tempos)
+    ax.bar(nomes, tempos)
     plt.show()
 
 clientes = busca_clientes()
-simula_Padaria(2, 1, clientes)
+simula_Padaria(1, 1, clientes)
 grafico_tempo_espera(clientes)
-
-
